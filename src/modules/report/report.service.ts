@@ -13,7 +13,12 @@ import {
   calculateStructureType,
   calculateRiskLevel,
 } from "./report.calculator.js";
-import { insertReport } from "./report.repository.js";
+import {
+  deleteReportById,
+  getReportById,
+  getReports,
+  insertReport,
+} from "./report.repository.js";
 
 // 기존 소비에 카테고리 합치기
 function mergeExpenses(
@@ -126,4 +131,74 @@ export async function saveReportService(data: SaveReportInput, userId: number) {
     console.error(err);
     throw new AppError("리포트 저장에 실패했습니다.", 500);
   }
+}
+
+// 리포트 삭제
+export async function deleteReportByIdService(id: number, user_id: number) {
+  const affected = await deleteReportById(id, user_id);
+
+  if (affected === 0) {
+    throw new AppError("리포트를 찾을 수 없습니다.", 404);
+  }
+
+  return {
+    success: true,
+  };
+}
+
+// id 리포트 가져오기
+export async function getReportByIdService(id: number, user_id: number) {
+  const report = await getReportById(id, user_id);
+
+  if (!report) {
+    throw new AppError("리포트를 찾을 수 없습니다.", 404);
+  }
+
+  return {
+    ...report,
+    insight_json:
+      typeof report.insight_json === "string"
+        ? JSON.parse(report.insight_json)
+        : report.insight_json,
+    expenses_json:
+      typeof report.expenses_json === "string"
+        ? JSON.parse(report.expenses_json)
+        : report.expenses_json,
+  };
+}
+
+type GetReportsParams = {
+  user_id: number;
+  page: number;
+  limit: number;
+  sortBy: string;
+  order: string;
+  type?: string;
+};
+
+// 리포트 목록 불러오기
+export async function getReportsService(params: GetReportsParams) {
+  const { user_id, page, limit, sortBy, order, type } = params;
+
+  const offset = (page - 1) * limit;
+
+  const { rows, total } = await getReports({
+    user_id,
+    offset,
+    limit,
+    sortBy,
+    order,
+    type,
+  });
+
+  return {
+    data: rows,
+
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 }
