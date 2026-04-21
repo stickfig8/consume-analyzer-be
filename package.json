@@ -1,0 +1,38 @@
+{
+  "name": "ca_be",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@google/genai": "^1.50.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.22.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.0",
+    "eslint": "^10.2.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-node": "^11.1.0",
+    "globals": "^17.5.0",
+    "prettier": "^3.8.3",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}
