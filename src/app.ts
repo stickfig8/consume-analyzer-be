@@ -30,5 +30,5 @@ app.get("/api", (req: Request, res: Response) => {
   res.send("Consume Analyzer API");
 });
 
-app.use(errorMiddleware);
 app.use("/api", router);
+app.use(errorMiddleware);
